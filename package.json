@@ -4,7 +4,16 @@
   "description": "Code challenge for Mercedes-Benz.io",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "cypress": "cypress open",
+    "cypress:headless": "cypress run --browser chrome --headless && cd ..",
+    "lint:js": "eslint \"./cypress/**/*.{js,jsx}\"",
+    "prettier:base": "prettier",
+    "format:fix": "npm run prettier:base -- --write '**/*.{js,jsx}'",
+    "format": "npm run lint:js && clear && npm run format:fix",
+    "report:create": "npm run report:merge && npm run report:html",
+    "report:merge": "npx mochawesome-merge cypress/results/*.json > mochawesome.json",
+    "report:html": "npx marge mochawesome.json",
+    "delete:reports": "rm cypress/results/* ; rm mochawesome.json || true"
   },
   "repository": {
     "type": "git",
@@ -18,7 +27,12 @@
   "homepage": "https://github.com/vandakiara/code-challenge-mercedes#readme",
   "devDependencies": {
     "cypress": "^5.6.0",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-cypress": "^2.11.2",
+    "eslint-plugin-prettier": "^3.1.4",
     "mocha": "^8.2.1",
-    "mochawesome": "^6.2.1"
+    "mochawesome": "^6.2.1",
+    "prettier": "2.2.0"
   }
 }

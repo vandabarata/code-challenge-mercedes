@@ -1,0 +1,19 @@
+{
+	"extends": ["plugin:cypress/recommended", "prettier"],
+	"env": {
+		"browser": true
+	},
+	"plugins": ["prettier"],
+	"rules": {
+		"no-prototype-builtins": "warn",
+		"jsx-a11y/no-autofocus": 0,
+		"prettier/prettier": ["warn"],
+		"spaced-comment": ["warn", "always", { "markers": ["/"] }],
+		"no-unused-vars": "warn",
+		"valid-jsdoc": "warn",
+		"cypress/no-unnecessary-waiting": "warn",
+		"new-cap": "warn",
+		"no-console": "warn",
+		"max-statements": "off"
+	}
+}
