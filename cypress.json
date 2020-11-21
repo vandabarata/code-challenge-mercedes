@@ -1,0 +1,12 @@
+{
+    "baseUrl": "https://shop.mercedes-benz.com/en-gb/collection/",
+    "reporter": "mochawesome",
+    "reporterOptions": {
+        "reportDir": "cypress/results",
+        "overwrite": false,
+        "html": false,
+        "json": true
+    },
+    "viewportWidth": 1280,
+    "viewportHeight": 800
+}
