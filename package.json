@@ -9,7 +9,6 @@
     "cypress:chrome": "cypress run --browser chrome --headless",
     "cypress:edge": "cypress run --browser edge --headless",
     "cypress:firefox": "cypress run --browser firefox --headless",
-    "cypress:safari": "cypress run --browser safari --headless",
     "delete:reports": "rm cypress/results/* ; rm cypress/results/assets/* || true",
     "delete:screenshots": "rm cypress/screenshots/* || true",
     "delete:videos": "rm cypress/videos/* || true",
@@ -22,8 +21,7 @@
     "report:html": "marge cypress/results/report.json -f report -o cypress/results",
     "tests:chrome": "npm run clean && npm run cypress:chrome ; npm run report:create",
     "tests:edge": "npm run clean && npm run cypress:edge ; npm run report:create",
-    "tests:firefox": "npm run clean && npm run cypress:firefox ; npm run report:create",
-    "tests:safari": "npm run clean && npm run cypress:safari ; npm run report:create"
+    "tests:firefox": "npm run clean && npm run cypress:firefox ; npm run report:create"
   },
   "repository": {
     "type": "git",
