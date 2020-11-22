@@ -7,6 +7,7 @@
  */
 
 const { SHOPPING_CAROUSEL, WOMEN_OPTION, MEN_OPTION, CHILDREN_OPTION } = require("../selectors/shopping_category");
+
 const {
 	SHOPPING_CART_NUMBER_INDICATOR,
 	PROCEED_FOOTER_OPTION,
@@ -57,6 +58,14 @@ const {
 	PAYMENT_ACCEPT_CONDITIONS_CHECKBOX,
 } = require("../selectors/shopping_payment");
 
+const {
+	INVOICE_ADDRESS_TITLE_TEXT,
+	PAYMENT_TYPE_TITLE_TEXT,
+	PAYMENT_ORDER_DATA_TITLE_TEXT,
+	DEFAULT_DELIVERY_TEXT,
+	PAYPAL_PAYMENT_TYPE_TEXT,
+} = require("../support/constants");
+
 const customer = require("../fixtures/customer_mock_data.json");
 
 describe("Shopping Page Workflow", () => {
@@ -100,14 +109,14 @@ describe("Shopping Page Workflow", () => {
 		cy.get(PROCEED_AS_GUEST_BTN).should("be.visible").should("be.enabled").click();
 
 		// confirm you reached the address details page
-		cy.get(INVOICE_ADDRESS_TITLE, { timeout: 10000 }).should("have.text", "Your invoice address");
+		cy.get(INVOICE_ADDRESS_TITLE, { timeout: 10000 }).should("have.text", INVOICE_ADDRESS_TITLE_TEXT);
 	});
 
 	it("should show delivery address options", () => {
 		cy.goToCheckoutCustomerDetails();
 
 		// confirm you reached the address details page
-		cy.get(INVOICE_ADDRESS_TITLE, { timeout: 10000 }).should("have.text", "Your invoice address");
+		cy.get(INVOICE_ADDRESS_TITLE, { timeout: 10000 }).should("have.text", INVOICE_ADDRESS_TITLE_TEXT);
 
 		// confirm the button to proceed is disabled prior to filling in the mandatory details
 		cy.get(PROCEED_FOOTER_OPTION).should("be.disabled");
@@ -155,7 +164,7 @@ describe("Shopping Page Workflow", () => {
 		cy.goToPaymentType();
 
 		// confirm you're in the payment type page
-		cy.get(PAYMENT_TYPE_TITLE, { timeout: 10000 }).should("have.text", "Your payment type");
+		cy.get(PAYMENT_TYPE_TITLE, { timeout: 10000 }).should("have.text", PAYMENT_TYPE_TITLE_TEXT);
 
 		// select credit card and assert that VISA, Mastercard
 		// and American Express options are present
@@ -174,7 +183,7 @@ describe("Shopping Page Workflow", () => {
 		cy.goToFinalPaymentPage();
 
 		// confirm you're in the order data page
-		cy.get(PAYMENT_ORDER_DATA_TITLE, { timeout: 10000 }).should("have.text", "Your order data");
+		cy.get(PAYMENT_ORDER_DATA_TITLE, { timeout: 10000 }).should("have.text", PAYMENT_ORDER_DATA_TITLE_TEXT);
 
 		// the option to proceed should be disabled prior to checking
 		// the checkbox for accepting terms and conditions
@@ -202,10 +211,10 @@ describe("Shopping Page Workflow", () => {
 		cy.get(PAYMENT_ORDER_DELIVERY_ADDRESS).should("contain.text", customer.country);
 
 		// assert shipping type
-		cy.get(PAYMENT_ORDER_SHIPPING_TYPE).should("contain.text", "Standard Delivery");
+		cy.get(PAYMENT_ORDER_SHIPPING_TYPE).should("contain.text", DEFAULT_DELIVERY_TEXT);
 
 		// assert payment type
-		cy.get(PAYMENT_ORDER_PAYMENT_TYPE).should("contain.text", "PayPal");
+		cy.get(PAYMENT_ORDER_PAYMENT_TYPE).should("contain.text", PAYPAL_PAYMENT_TYPE_TEXT);
 
 		// assert user has the option to change shopping cart
 		cy.get(PAYMENT_CHANGE_SHOPPING_CART).should("be.visible");

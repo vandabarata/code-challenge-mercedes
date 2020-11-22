@@ -64,7 +64,7 @@ Cypress.Commands.add("goToShoppingBasket", () => {
 	cy.get(LIST_1ST_ITEM).click({ force: true });
 
 	// assert options to buy item and click to buy
-	cy.get(ADD_TO_BASKET_BTN, { timeout: 10000 }).first().click();
+	cy.get(ADD_TO_BASKET_BTN, { timeout: 15000 }).first().click();
 
 	// assert options to go to basket or continue shopping
 	cy.get(GO_TO_SHOPPING_BASKET_BTN).click();
