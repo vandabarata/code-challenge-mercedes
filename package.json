@@ -14,7 +14,7 @@
     "format": "npm run lint:js && clear && npm run format:fix",
     "format:fix": "npm run prettier -- --write '**/*.{js,jsx}'",
     "lint:js": "eslint \"./cypress/**/*.{js,jsx}\"",
-    "report:create": "npm run report:merge && npm run report:html", 
+    "report:create": "npm run report:merge && npm run report:html",
     "report:merge": "npm run mochawesome-merge cypress/results/*.json > mochawesome.json",
     "report:html": "marge mochawesome.json",
     "tests:chrome": "npm run clean && npm run cypress:chrome || npm run report:create",
