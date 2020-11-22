@@ -26,6 +26,14 @@ ___
         * ```shell
           npm run cypress
           ```
+        This will open the cypress window where you can select in which browser to run
+        ![cypress_open_browsers](https://user-images.githubusercontent.com/1148556/99911546-27b55a80-2ced-11eb-8e8f-39dfa90afea7.png)
+
+        After choosing a browser, all you need to do is click on `Run 1 integration spec`
+        ![cypress_open_run_spec](https://user-images.githubusercontent.com/1148556/99911610-92669600-2ced-11eb-8727-bd05409039f2.png)
+
+        This will open the chosen browser and run the tests in real time
+        ![cypress_chrome_run](https://user-images.githubusercontent.com/1148556/99911608-8f6ba580-2ced-11eb-9930-8e4a74f9f8a7.png)
     * If you want to **run the tests in the background** and **generate reports**:
         * Chrome:
             ```shell 
@@ -40,6 +48,8 @@ ___
             npm run tests:edge  
             ```
         Generated reports can be found inside `cypress/results` - final results are in the `cypress/results/report.html` file.
+        They should look like the screenshot below and be interactive.
+        ![cypress_report](https://user-images.githubusercontent.com/1148556/99911756-6992d080-2cee-11eb-89a2-11f79457a362.png)
         
         If there are test failures, screenshots will be captured and saved in `cypress/screenshots`. 
         
