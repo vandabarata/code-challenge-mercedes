@@ -68,7 +68,15 @@ const {
 
 const customer = require("../fixtures/customer_mock_data.json");
 
+/*
+ * Tests focused on testing the shopping workflow,
+ * from the homepage to the last checkout page before enacting payment.
+ */
 describe("Shopping Page Workflow", () => {
+	/*
+	 * Goes to homepage, accepts cookies and confirms that
+	 * the shopping categories are visible before starting each test.
+	 */
 	beforeEach(() => {
 		cy.visit("/");
 
@@ -79,6 +87,10 @@ describe("Shopping Page Workflow", () => {
 		cy.get(SHOPPING_CAROUSEL, { timeout: 10000 }).should("be.visible");
 	});
 
+	/*
+	 * Adds items to shopping basket from 3 different shopping categories,
+	 * and confirms they're shown in the shopping cart indicator.
+	 */
 	it("should add items to shopping basket", () => {
 		// choose first item inside the "Fashion and Beauty - Men" category
 		cy.addFirstItemToShoppingCart(MEN_OPTION);
@@ -97,6 +109,10 @@ describe("Shopping Page Workflow", () => {
 		cy.get(SHOPPING_CART_NUMBER_INDICATOR).should("be.visible").should("have.text", "3");
 	});
 
+	/*
+	 * Adds 1 item to shopping cart and confirms
+	 * the user can proceed to checkout as a guest.
+	 */
 	it("should allow user to proceed as guest", () => {
 		cy.goToShoppingBasket();
 
@@ -112,6 +128,11 @@ describe("Shopping Page Workflow", () => {
 		cy.get(INVOICE_ADDRESS_TITLE, { timeout: 10000 }).should("have.text", INVOICE_ADDRESS_TITLE_TEXT);
 	});
 
+	/*
+	 * Adds 1 item to shopping cart, proceeds to checkout as guest,
+	 * and confirms the user can fill in their delivery and invoice details,
+	 * as well as being unable to proceed before filling in the mandatory fields.
+	 */
 	it("should show delivery address options", () => {
 		cy.goToCheckoutCustomerDetails();
 
@@ -160,6 +181,11 @@ describe("Shopping Page Workflow", () => {
 		cy.get(PROCEED_FOOTER_OPTION).should("be.enabled");
 	});
 
+	/*
+	 * Adds 1 item to shopping cart, proceeds to checkout as a guest,
+	 * fills in invoice details (and uses them for delivery),
+	 * and confirms payment options available.
+	 */
 	it("should show all available payment types", () => {
 		cy.goToPaymentType();
 
@@ -179,6 +205,12 @@ describe("Shopping Page Workflow", () => {
 		cy.get(PROCEED_FOOTER_OPTION).should("be.enabled");
 	});
 
+	/*
+	 * Adds 1 item to shopping cart, proceeds to checkout as a guest,
+	 * fills in invoice details (and uses them for delivery),
+	 * selects paypal as payment option, and confirms all the details
+	 * shown on the checkout page before payment.
+	 */
 	it("should show Order Data page correctly", () => {
 		cy.goToFinalPaymentPage();
 
@@ -225,7 +257,7 @@ describe("Shopping Page Workflow", () => {
 		cy.get(PAYMENT_CHANGE_SHIPPING).should("be.visible");
 		cy.get(PAYMENT_CHANGE_PAYMENT_METHOD).should("be.visible");
 
-		// Check the "Accept terms and conditions" checkbox and
+		// check the "Accept terms and conditions" checkbox and
 		// confirm it's now possible to proceed
 		cy.get(PAYMENT_ACCEPT_CONDITIONS_CHECKBOX).click();
 		cy.get(PROCEED_FOOTER_OPTION).should("be.enabled");
