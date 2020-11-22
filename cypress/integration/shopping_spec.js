@@ -179,7 +179,7 @@ describe("Shopping Page Workflow", () => {
 		cy.get(PROCEED_FOOTER_OPTION).should("be.enabled");
 	});
 
-	it("should show Order Data page correctly", () => {
+	it.only("should show Order Data page correctly", () => {
 		cy.goToFinalPaymentPage();
 
 		// confirm you're in the order data page

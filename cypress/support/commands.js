@@ -22,6 +22,7 @@ const {
 	DOB_YEAR_FIELD,
 } = require("../selectors/shopping_address");
 const { PAYMENT_TYPE_TITLE, PAYMENT_TYPE_PAYPAL_OPTION } = require("../selectors/shopping_payment");
+const { PAYMENT_TYPE_TITLE_TEXT, INVOICE_ADDRESS_TITLE_TEXT } = require("./constants");
 
 const customer = require("../fixtures/customer_mock_data.json");
 
@@ -44,7 +45,7 @@ Cypress.Commands.add("addFirstItemToShoppingCart", (section) => {
 	cy.get(LIST_1ST_ITEM).click({ force: true });
 
 	// assert options to buy item and click to buy
-	cy.get(ADD_TO_BASKET_BTN, { timeout: 10000 }).should("be.visible").should("be.enabled").first().click();
+	cy.get(ADD_TO_BASKET_BTN, { timeout: 20000 }).should("be.visible").should("be.enabled").first().click();
 
 	// assert options to go to basket or continue shopping
 	// click to continue shopping
@@ -64,7 +65,7 @@ Cypress.Commands.add("goToShoppingBasket", () => {
 	cy.get(LIST_1ST_ITEM).click({ force: true });
 
 	// assert options to buy item and click to buy
-	cy.get(ADD_TO_BASKET_BTN, { timeout: 15000 }).first().click();
+	cy.get(ADD_TO_BASKET_BTN, { timeout: 20000 }).first().click();
 
 	// assert options to go to basket or continue shopping
 	cy.get(GO_TO_SHOPPING_BASKET_BTN).click();
@@ -93,7 +94,7 @@ Cypress.Commands.add("goToPaymentType", () => {
 	cy.goToCheckoutCustomerDetails();
 
 	// confirm you reached the address details page
-	cy.get(INVOICE_ADDRESS_TITLE, { timeout: 10000 }).should("contain.text", "Your invoice address");
+	cy.get(INVOICE_ADDRESS_TITLE, { timeout: 10000 }).should("contain.text", INVOICE_ADDRESS_TITLE_TEXT);
 
 	// select the 'Ms' option on the salutation radio buttons
 	cy.get(SALUTATION_MS_BTN).click({ force: true });
@@ -109,7 +110,7 @@ Cypress.Commands.add("goToPaymentType", () => {
 	cy.get(DOB_MONTH_FIELD).type(customer.dob_month);
 	cy.get(DOB_YEAR_FIELD).type(customer.dob_year);
 
-	cy.get(PROCEED_FOOTER_OPTION).click();
+	cy.get(PROCEED_FOOTER_OPTION).first().click();
 });
 
 /*
@@ -120,10 +121,10 @@ Cypress.Commands.add("goToFinalPaymentPage", () => {
 	cy.goToPaymentType();
 
 	// confirm you're in the payment type page
-	cy.get(PAYMENT_TYPE_TITLE, { timeout: 10000 }).should("contain.text", "Your payment type");
+	cy.get(PAYMENT_TYPE_TITLE, { timeout: 10000 }).should("contain.text", PAYMENT_TYPE_TITLE_TEXT);
 
 	// select paypal option
 	cy.get(PAYMENT_TYPE_PAYPAL_OPTION).click({ force: true });
 
-	cy.get(PROCEED_FOOTER_OPTION).click();
+	cy.get(PROCEED_FOOTER_OPTION).first().click();
 });
