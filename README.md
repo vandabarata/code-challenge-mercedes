@@ -49,7 +49,7 @@ ___
             ```
         Generated reports can be found inside `cypress/results` - final results are in the `cypress/results/report.html` file.
         They should look like the screenshot below and be interactive.
-        ![cypress_report](https://user-images.githubusercontent.com/1148556/99911756-6992d080-2cee-11eb-89a2-11f79457a362.png)
+        ![cypress_report](https://user-images.githubusercontent.com/1148556/99912691-a4e1cf00-2cef-11eb-82b5-591f85fa6c54.png)
         
         If there are test failures, screenshots will be captured and saved in `cypress/screenshots`. 
         
