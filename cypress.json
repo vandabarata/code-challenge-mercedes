@@ -1,5 +1,6 @@
 {
     "baseUrl": "https://shop.mercedes-benz.com/en-gb/collection/",
+    "projectId": "Mercedes Code Challenge - Vanda Barata",
     "reporter": "mochawesome",
     "reporterOptions": {
         "reportDir": "cypress/results",
@@ -8,5 +9,6 @@
         "json": true
     },
     "viewportWidth": 1280,
-    "viewportHeight": 800
+    "viewportHeight": 800,
+    "numTestsKeptInMemory": 10
 }
