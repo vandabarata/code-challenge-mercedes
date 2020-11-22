@@ -21,6 +21,7 @@ const {
 	DOB_MONTH_FIELD,
 	DOB_YEAR_FIELD,
 } = require("../selectors/shopping_address");
+const { PAYMENT_TYPE_TITLE, PAYMENT_TYPE_PAYPAL_OPTION } = require("../selectors/shopping_payment");
 
 const customer = require("../fixtures/customer_mock_data.json");
 
@@ -29,6 +30,26 @@ const customer = require("../fixtures/customer_mock_data.json");
  */
 Cypress.Commands.add("acceptCookies", () => {
 	cy.get(".cp-inner").find(".btn").click();
+});
+
+/*
+ * Custom command to add first item on the given
+ * shopping section to the shopping cart.
+ */
+Cypress.Commands.add("addFirstItemToShoppingCart", (section) => {
+	// select section inside the "Fashion and Beauty" category
+	cy.get(section).click({ force: true });
+
+	// select first listed item to buy
+	cy.get(LIST_1ST_ITEM).click({ force: true });
+
+	// assert options to buy item and click to buy
+	cy.get(ADD_TO_BASKET_BTN, { timeout: 10000 }).should("be.visible").should("be.enabled").first().click();
+
+	// assert options to go to basket or continue shopping
+	// click to continue shopping
+	cy.get(GO_TO_SHOPPING_BASKET_BTN).should("be.visible").should("be.enabled");
+	cy.get(CONTINUE_SHOPPING_BTN).should("be.visible").should("be.enabled").click();
 });
 
 /*
@@ -47,26 +68,6 @@ Cypress.Commands.add("goToShoppingBasket", () => {
 
 	// assert options to go to basket or continue shopping
 	cy.get(GO_TO_SHOPPING_BASKET_BTN).click();
-});
-
-/*
- * Custom command to add first item on the given
- * shopping section to the shopping cart.
- */
-Cypress.Commands.add("addFirstItemToShoppingCart", (section) => {
-	// select "Men" inside the "Fashion and Beauty" category
-	cy.get(section).click({ force: true });
-
-	// select first listed item to buy
-	cy.get(LIST_1ST_ITEM).click({ force: true });
-
-	// assert options to buy item and click to buy
-	cy.get(ADD_TO_BASKET_BTN, { timeout: 10000 }).should("be.visible").should("be.enabled").first().click();
-
-	// assert options to go to basket or continue shopping
-	// click to continue shopping
-	cy.get(GO_TO_SHOPPING_BASKET_BTN).should("be.visible").should("be.enabled");
-	cy.get(CONTINUE_SHOPPING_BTN).should("be.visible").should("be.enabled").click();
 });
 
 /*
@@ -107,6 +108,22 @@ Cypress.Commands.add("goToPaymentType", () => {
 	cy.get(DOB_DAY_FIELD).type(customer.dob_day);
 	cy.get(DOB_MONTH_FIELD).type(customer.dob_month);
 	cy.get(DOB_YEAR_FIELD).type(customer.dob_year);
+
+	cy.get(PROCEED_FOOTER_OPTION).click();
+});
+
+/*
+ * Custom Command to go directly to the
+ * last payment page of the workflow.
+ */
+Cypress.Commands.add("goToFinalPaymentPage", () => {
+	cy.goToPaymentType();
+
+	// confirm you're in the payment type page
+	cy.get(PAYMENT_TYPE_TITLE, { timeout: 10000 }).should("contain.text", "Your payment type");
+
+	// select paypal option
+	cy.get(PAYMENT_TYPE_PAYPAL_OPTION).click({ force: true });
 
 	cy.get(PROCEED_FOOTER_OPTION).click();
 });

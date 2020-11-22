@@ -37,6 +37,26 @@ const {
 	DELIVERY_TOWN_CITY_FIELD,
 } = require("../selectors/shopping_address");
 
+const {
+	PAYMENT_TYPE_TITLE,
+	PAYMENT_TYPE_CARD_OPTION,
+	PAYMENT_TYPE_CARD_VISA_OPTION,
+	PAYMENT_TYPE_CARD_MASTERCARD_OPTION,
+	PAYMENT_TYPE_CARD_AMEX_OPTION,
+	PAYMENT_TYPE_PAYPAL_OPTION,
+	PAYMENT_ORDER_DATA_TITLE,
+	PAYMENT_ORDER_INVOICE_ADDRESS,
+	PAYMENT_ORDER_DELIVERY_ADDRESS,
+	PAYMENT_ORDER_SHIPPING_TYPE,
+	PAYMENT_ORDER_PAYMENT_TYPE,
+	PAYMENT_CHANGE_SHOPPING_CART,
+	PAYMENT_CHANGE_INVOICE_ADDRESS,
+	PAYMENT_CHANGE_DELIVERY_ADDRESS,
+	PAYMENT_CHANGE_SHIPPING,
+	PAYMENT_CHANGE_PAYMENT_METHOD,
+	PAYMENT_ACCEPT_CONDITIONS_CHECKBOX,
+} = require("../selectors/shopping_payment");
+
 const customer = require("../fixtures/customer_mock_data.json");
 
 describe("Shopping Page Workflow", () => {
@@ -65,7 +85,7 @@ describe("Shopping Page Workflow", () => {
 		cy.addFirstItemToShoppingCart(CHILDREN_OPTION);
 
 		// assert shopping cart is showing indicator of 3 products
-		cy.get(SHOPPING_CART_NUMBER_INDICATOR).should("be.visible").should("contain.text", "3");
+		cy.get(SHOPPING_CART_NUMBER_INDICATOR).should("be.visible").should("have.text", "3");
 	});
 
 	it("should allow user to proceed as guest", () => {
@@ -80,14 +100,17 @@ describe("Shopping Page Workflow", () => {
 		cy.get(PROCEED_AS_GUEST_BTN).should("be.visible").should("be.enabled").click();
 
 		// confirm you reached the address details page
-		cy.get(INVOICE_ADDRESS_TITLE, { timeout: 10000 }).should("contain.text", "Your invoice address");
+		cy.get(INVOICE_ADDRESS_TITLE, { timeout: 10000 }).should("have.text", "Your invoice address");
 	});
 
 	it("should show delivery address options", () => {
 		cy.goToCheckoutCustomerDetails();
 
 		// confirm you reached the address details page
-		cy.get(INVOICE_ADDRESS_TITLE, { timeout: 10000 }).should("contain.text", "Your invoice address");
+		cy.get(INVOICE_ADDRESS_TITLE, { timeout: 10000 }).should("have.text", "Your invoice address");
+
+		// confirm the button to proceed is disabled prior to filling in the mandatory details
+		cy.get(PROCEED_FOOTER_OPTION).should("be.disabled");
 
 		// select the 'Ms' option on the salutation radio buttons
 		cy.get(SALUTATION_MS_BTN).click({ force: true });
@@ -114,7 +137,7 @@ describe("Shopping Page Workflow", () => {
 		// select the option for a different delivery address
 		cy.get(DELIVERY_ADDRESS_OPTION).click();
 
-		// select the 'Ms' option on the salutation radio buttons
+		// select the 'Mr' option on the salutation radio buttons
 		cy.get(DELIVERY_SALUTATION_MR_BTN).click({ force: true });
 
 		// fill the fields for the delivery address details
@@ -125,6 +148,77 @@ describe("Shopping Page Workflow", () => {
 		cy.get(DELIVERY_POST_CODE_FIELD).type(customer.post_code);
 		cy.get(DELIVERY_TOWN_CITY_FIELD).type(customer.city_alt);
 
-		cy.get(PROCEED_FOOTER_OPTION).click();
+		cy.get(PROCEED_FOOTER_OPTION).should("be.enabled");
+	});
+
+	it("should show all available payment types", () => {
+		cy.goToPaymentType();
+
+		// confirm you're in the payment type page
+		cy.get(PAYMENT_TYPE_TITLE, { timeout: 10000 }).should("have.text", "Your payment type");
+
+		// select credit card and assert that VISA, Mastercard
+		// and American Express options are present
+		cy.get(PAYMENT_TYPE_CARD_OPTION).click({ force: true });
+		cy.get(PAYMENT_TYPE_CARD_VISA_OPTION).should("be.visible");
+		cy.get(PAYMENT_TYPE_CARD_MASTERCARD_OPTION).should("be.visible");
+		cy.get(PAYMENT_TYPE_CARD_AMEX_OPTION).should("be.visible");
+
+		// select paypal option
+		cy.get(PAYMENT_TYPE_PAYPAL_OPTION).click({ force: true });
+
+		cy.get(PROCEED_FOOTER_OPTION).should("be.enabled");
+	});
+
+	it("should show Order Data page correctly", () => {
+		cy.goToFinalPaymentPage();
+
+		// confirm you're in the order data page
+		cy.get(PAYMENT_ORDER_DATA_TITLE, { timeout: 10000 }).should("have.text", "Your order data");
+
+		// the option to proceed should be disabled prior to checking
+		// the checkbox for accepting terms and conditions
+		cy.get(PROCEED_FOOTER_OPTION).should("be.disabled");
+
+		// assert the values for the invoice address are correct
+		cy.get(PAYMENT_ORDER_INVOICE_ADDRESS).should("contain.text", customer.honorific);
+		cy.get(PAYMENT_ORDER_INVOICE_ADDRESS).should("contain.text", customer.first_name);
+		cy.get(PAYMENT_ORDER_INVOICE_ADDRESS).should("contain.text", customer.last_name);
+		cy.get(PAYMENT_ORDER_INVOICE_ADDRESS).should("contain.text", customer.street);
+		cy.get(PAYMENT_ORDER_INVOICE_ADDRESS).should("contain.text", customer.number);
+		cy.get(PAYMENT_ORDER_INVOICE_ADDRESS).should("contain.text", customer.post_code);
+		cy.get(PAYMENT_ORDER_INVOICE_ADDRESS).should("contain.text", customer.city);
+		cy.get(PAYMENT_ORDER_INVOICE_ADDRESS).should("contain.text", customer.country);
+		cy.get(PAYMENT_ORDER_INVOICE_ADDRESS).should("contain.text", customer.email);
+
+		// assert the values for the delivery address are correct
+		cy.get(PAYMENT_ORDER_DELIVERY_ADDRESS).should("contain.text", customer.honorific);
+		cy.get(PAYMENT_ORDER_DELIVERY_ADDRESS).should("contain.text", customer.first_name);
+		cy.get(PAYMENT_ORDER_DELIVERY_ADDRESS).should("contain.text", customer.last_name);
+		cy.get(PAYMENT_ORDER_DELIVERY_ADDRESS).should("contain.text", customer.street);
+		cy.get(PAYMENT_ORDER_DELIVERY_ADDRESS).should("contain.text", customer.number);
+		cy.get(PAYMENT_ORDER_DELIVERY_ADDRESS).should("contain.text", customer.post_code);
+		cy.get(PAYMENT_ORDER_DELIVERY_ADDRESS).should("contain.text", customer.city);
+		cy.get(PAYMENT_ORDER_DELIVERY_ADDRESS).should("contain.text", customer.country);
+
+		// assert shipping type
+		cy.get(PAYMENT_ORDER_SHIPPING_TYPE).should("contain.text", "Standard Delivery");
+
+		// assert payment type
+		cy.get(PAYMENT_ORDER_PAYMENT_TYPE).should("contain.text", "PayPal");
+
+		// assert user has the option to change shopping cart
+		cy.get(PAYMENT_CHANGE_SHOPPING_CART).should("be.visible");
+
+		// assert all 4 detail steps have an option to be changed
+		cy.get(PAYMENT_CHANGE_INVOICE_ADDRESS).should("be.visible");
+		cy.get(PAYMENT_CHANGE_DELIVERY_ADDRESS).should("be.visible");
+		cy.get(PAYMENT_CHANGE_SHIPPING).should("be.visible");
+		cy.get(PAYMENT_CHANGE_PAYMENT_METHOD).should("be.visible");
+
+		// Check the "Accept terms and conditions" checkbox and
+		// confirm it's now possible to proceed
+		cy.get(PAYMENT_ACCEPT_CONDITIONS_CHECKBOX).click();
+		cy.get(PROCEED_FOOTER_OPTION).should("be.enabled");
 	});
 });
